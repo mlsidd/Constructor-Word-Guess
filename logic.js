@@ -1,38 +1,35 @@
 // Import the word.js file
-var word = require('./word');
+var word = require('./word.js');
 
 // Create lives variable and array of words variable
-var lives = 10;
-var arrayOfWords = [];
+var guessesRemaining = 10;
+var arrayOfWords = ["cat", "dog", "mouse", "house"];
 
-// Randomly select a word to be used in the game
-
+// Randomly select a word to be used in the game (use random number in place of inde)x
 // Store this word in the word constructor from word.js
+var currentWord = new word(arrayOfWords[Math.floor(Math.random() * arrayOfWords.length)]);
+currentWord.displayWord();
 
-// Prompt user for letter guesses
-var inquirer = require("inquirer");
+function askUser() {
+  if (guessesRemaining > 0 && currentWord.currentWord !== currentWord.wordToDisplay) {
 
-inquirer.prompt([
-    {
-      name: "name",
-      message: "What is your name?"
-    }, {
-      name: "position",
-      message: "What is your current position?"
-    }, {
-      name: "age",
-      message: "How old are you?"
-    }, {
-      name: "language",
-      message: "What is your favorite programming language?"
-    }
-  ]).then(function(answers) {
-    // initializes the variable newProgrammer to be a programmer object which will take
-    // in all of the user's answers to the questions above
-    var newProgrammer = new Programmer(answers.name, answers.position, answers.age, answers.language);
-    // printInfo method is run to show that the newProgrammer object was successfully created and filled
-    newProgrammer.printInfo();
-  });
-  
+    // Prompt user for letter guesses
+    var inquirer = require("inquirer");
 
-// Start at 10 guesses remaining and subtract until reach 0
+    inquirer.prompt([
+      {
+        name: "letter",
+        message: "What letter do you guess?"
+      }
+    ]).then(function (answers) {
+
+      var letterGuess = answers.letter;
+      currentWord.checkGuess(letterGuess)
+      // Start at 10 guesses remaining and subtract until reach 0
+      guessesRemaining = guessesRemaining - 1;
+    })
+  } else if (currentWord.currentWord === currentWord.wordToDisplay) {
+    console.log("You Win!")
+  } else { askUser() } // otherwise, complete the askUser function
+}
+
